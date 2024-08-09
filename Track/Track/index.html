@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Information Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .info {
+            margin: 20px 0;
+        }
+        .info h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            color: #555;
+        }
+        .info p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #666;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #fileInput {
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Client Information</h1>
+        <input type="file" id="fileInput" accept=".json">
+        <div class="info">
+            <h2>Session Start Time</h2>
+            <p id="startTime">Select a file to load data</p>
+        </div>
+        <div class="info">
+            <h2>Session End Time</h2>
+            <p id="endTime"></p>
+        </div>
+        <div class="info">
+            <h2>Session Duration</h2>
+            <p id="duration"></p>
+        </div>
+        <div class="info">
+            <h2>System Information</h2>
+            <p id="systemInfo"></p>
+        </div>
+        <div class="info">
+            <h2>Public IP Address</h2>
+            <p id="publicIP"></p>
+        </div>
+        <div class="info">
+            <h2>Active Network Connections</h2>
+            <p id="activeConnections"></p>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 Client Info Display
+    </div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        // Update the HTML content with the data
+                        document.getElementById('startTime').textContent = data['Session Start Time'] || "N/A";
+                        document.getElementById('endTime').textContent = data['Session End Time'] || "N/A";
+                        document.getElementById('duration').textContent = data['Session Duration'] || "N/A";
+                        document.getElementById('systemInfo').textContent = data['System Information'] || "N/A";
+                        document.getElementById('publicIP').textContent = data['Public IP Address'] || "N/A";
+                        document.getElementById('activeConnections').textContent = data['Active Network Connections'] || "N/A";
+                    } catch (error) {
+                        console.error("Error parsing JSON:", error);
+                        alert("Error parsing JSON file.");
+                    }
+                };
+                reader.onerror = function() {
+                    alert("Error reading file.");
+                };
+                reader.readAsText(file);
+            } else {
+                alert("Please select a valid JSON file.");
+            }
+        });
+    </script>
+</body>
+</html>
